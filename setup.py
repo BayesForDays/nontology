@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='nontology',
-    version='0.0.6',
+    version='0.0.7',
     author='Cassandra Jacobs',
-    author_email='cjacobs@stitchfix.com',
+    author_email='jacobs.cassandra.l@gmail.com',
     license='MIT',
-    url='https://github.com/stitchfix/nontology',
+    url='https://github.com/BayesForDays/nontology',
     description='Functions for creating your own nontological `embeddings`',
     packages=find_packages(),
     long_description='Functions for creating your own nontological `embeddings`',
