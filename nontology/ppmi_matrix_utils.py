@@ -66,9 +66,7 @@ def construct_pmi_matrix(
     pmi_matrix = co_occur_log_matrix - marginal_log_matrix - np.log(k)
     if positive_only_flag:
         pmi_matrix[pmi_matrix < 0] = 0  # positive PMI: don't include negative associations
-        np.fill_diagonal(pmi_matrix, 0)
-    else:
-        np.fill_diagonal(pmi_matrix, 0)
+    np.fill_diagonal(pmi_matrix, 0)
     return pmi_matrix
 
 
