@@ -21,14 +21,6 @@ def tokenize(docs, word_tokenize_flag=1):
         return sent_tokenized
 
 
-def vectorize(df, colname, min_df=1):
-    # transform into useful features
-    df[colname] = df[colname].astype('unicode')
-    vectorizer = CountVectorizer(min_df=min_df)
-    vectorized_ = vectorizer.fit_transform(df[colname])
-    return vectorizer, vectorized_
-
-
 def no_tokenization(tokens):
     return tokens
 
@@ -52,8 +44,15 @@ def chunkify_doc(doc, window):
     return taller_doc
 
 
-def make_sparse(docs_to_fit, min_df=50, docs_to_transform=None):
-    cv = CountVectorizer(tokenizer=no_tokenization, preprocessor=None, lowercase=False, min_df=min_df)
+def make_sparse(
+        docs_to_fit, min_df=50, stop_words=None,
+        docs_to_transform=None
+):
+
+    cv = CountVectorizer(
+        tokenizer=no_tokenization, preprocessor=None,
+        stop_words=stop_words, lowercase=False, min_df=min_df
+    )
     if docs_to_transform is None:
         return cv, cv.fit_transform(docs_to_fit)
     elif docs_to_transform is not None:
