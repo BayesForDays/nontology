@@ -19,10 +19,8 @@ def construct_co_occurrence_matrix(sparse_tokens):
     :param sparse_tokens: A sparse matrix of counts
     :return:
     """
-    # transpose sparse matrices
-    sparse_tokens_t = sparse_tokens.T
-    # compute normalized log co-occurance counts
-    co_occur = sparse_tokens_t.dot(sparse_tokens).todense()
+    # compute normalized log co-occurrence counts
+    co_occur = (sparse_tokens.T).dot(sparse_tokens).todense()
     co_occur_log_matrix = sp.special.xlogy(
         sp.sign(co_occur), co_occur
     ) - np.log(co_occur.sum())
@@ -56,12 +54,12 @@ def construct_pmi_matrix(
         k=1.0, positive_only_flag=True
 ):
     """
-
-    :param co_occur_log_matrix:
-    :param marginal_log_matrix:
-    :param k:
-    :param positive_only_flag:
-    :return:
+    Calculates the PMI matrix
+    :param co_occur_log_matrix: Sparse matrix of co-occurrences of categorical variables
+    :param marginal_log_matrix: Matrix of marginal probabilities
+    :param k: Smoothing parameter
+    :param positive_only_flag: PMI matrix w/ negatives or PPMI without?
+    :return: PMI matrix
     """
     if k < 0:
         k = 0.0
@@ -84,7 +82,7 @@ def generate_pmi_matrix(
     :param marginal_log_matrix: Matrix of marginal probabilities
     :param k: Smoothing parameter
     :param positive_only_flag: PMI matrix w/ negatives or PPMI without?
-    :return:
+    :return: PMI matrix
     """
     return construct_pmi_matrix(
         co_occur_log_matrix, marginal_log_matrix,
@@ -95,8 +93,8 @@ def generate_pmi_matrix(
 def generate_matrices(sparse_tokens):
     """
     Legacy name from 0.0.8. Replaced by construct_matrices.
-    :param sparse_tokens:
-    :return:
+    :param sparse_tokens: A sparse matrix of counts
+    :return: Co-occurrence and marginal matrices.
     """
     return construct_matrices(sparse_tokens)
 
@@ -147,9 +145,9 @@ def compute_vectors(m, n_components=100, normalize_flag=True):
 
 def normalize(vecs):
     """
-
-    :param vecs:
-    :return:
+    Makes vectors length 1
+    :param vecs: Original vectors
+    :return: Unit vectors
     """
     return vecs / np.c_[np.sqrt((vecs ** 2).sum(axis=1))]
 
@@ -172,9 +170,11 @@ def compute_pmi_vectors(
 ):
     """
 
-    :param m:
-    :param n_pca_components:
-    :param k:
+    :param m: Sparse matrix of counts
+    :param n_components: Desired dimensionality of output
+    :param k: Smoothing parameter
+    :param normalize_flag: Whether to make vectors length 1
+
     :param normalize_flag:
     :return:
     """
@@ -196,10 +196,10 @@ def compute_glove_vectors(
         m, n_components, normalize_flag=True
 ):
     """
-
-    :param m:
-    :param n_pca_components:
-    :param normalize_flag:
+    From a sparse matrix m, generate lower-dimensional GloVe vectors.
+    :param m: Sparse matrix of counts
+    :param n_components: Desired dimensionality of output
+    :param normalize_flag: Whether to make vectors length 1
     :return:
     """
     # generate co-occurence matrix and outer product of normalized marginal token counts
