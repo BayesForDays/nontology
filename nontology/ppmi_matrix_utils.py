@@ -15,7 +15,7 @@ def vectorize(df, colname, min_df=1):
     :return: Sparse vectors for each row and the object that created those features
     """
     # transform into useful features
-    df[colname] = df[colname].astype(unicode)
+    df[colname] = df[colname].astype('unicode')
     vectorizer = CountVectorizer(min_df=min_df)
     vectorized_ = vectorizer.fit_transform(df[colname])
     return vectorizer, vectorized_
@@ -33,10 +33,15 @@ def generate_co_occurrence_matrix(sparse_tokens):
     # compute normalized log co-occurance counts
     co_occur = sparse_tokens_t.dot(sparse_tokens)
     dense_co_occur = co_occur.todense()
-    co_occur_log_matrix = sp.special.xlogy(sp.sign(dense_co_occur),
-                                           dense_co_occur) - np.log(co_occur.sum())
+    co_occur_log_matrix = sp.special.xlogy(
+        sp.sign(dense_co_occur), dense_co_occur
+    ) - np.log(co_occur.sum())
     np.fill_diagonal(co_occur_log_matrix, 0)
     return co_occur_log_matrix
+
+
+def construct_co_occurence_matrix(sparse_tokens):
+    return generate_co_occurrence_matrix(sparse_tokens)
 
 
 def generate_marginal_matrix(sparse_tokens):
@@ -51,7 +56,14 @@ def generate_marginal_matrix(sparse_tokens):
     return marginal_log_matrix
 
 
-def generate_pmi_matrix(co_occur_log_matrix, marginal_log_matrix, k=1.0):
+def construct_marginal_matrix(sparse_tokens):
+    return generate_marginal_matrix(sparse_tokens)
+
+
+def generate_pmi_matrix(
+        co_occur_log_matrix, marginal_log_matrix,
+        k=1.0, positive_only_flag=True
+):
     """
     Calculate PMI - p(AB)/(p(A)*p(B))
     I do not recommend doing this on the raw matrices if you used lots of one-hot encoded variables
@@ -63,9 +75,22 @@ def generate_pmi_matrix(co_occur_log_matrix, marginal_log_matrix, k=1.0):
     if k < 0:
         k = 0.0
     pmi_matrix = co_occur_log_matrix - marginal_log_matrix - np.log(k)
-    pmi_matrix[pmi_matrix < 0] = 0  # positive PMI: don't include negative associations
-    np.fill_diagonal(pmi_matrix, 0)
+    if positive_only_flag:
+        pmi_matrix[pmi_matrix < 0] = 0  # positive PMI: don't include negative associations
+        np.fill_diagonal(pmi_matrix, 0)
+    else:
+        np.fill_diagonal(pmi_matrix, 0)
     return pmi_matrix
+
+
+def construct_pmi_matrix(
+        co_occur_log_matrix, marginal_log_matrix,
+        k=1.0, positive_only_flag=True
+):
+    return generate_marginal_matrix(
+        co_occur_log_matrix, marginal_log_matrix,
+        k=1.0, positive_only_flag=True
+)
 
 
 def generate_matrices(sparse_tokens):
