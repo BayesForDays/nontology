@@ -8,12 +8,57 @@ import pandas as pd
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 
+def tokenize(docs, word_tokenize_flag=1):
+    sent_tokenized = []
+    for d_ in docs:
+        sent_tokenized += sent_tokenize(d_)
+    if word_tokenize_flag==1:
+        word_tokenized = []
+        for sent in sent_tokenized:
+            word_tokenized.append(word_tokenize(sent))
+        return word_tokenized
+    elif word_tokenize_flag==0:
+        return sent_tokenized
+
+
 def vectorize(df, colname, min_df=1):
     # transform into useful features
     df[colname] = df[colname].astype('unicode')
     vectorizer = CountVectorizer(min_df=min_df)
     vectorized_ = vectorizer.fit_transform(df[colname])
     return vectorizer, vectorized_
+
+
+def no_tokenization(tokens):
+    return tokens
+
+
+def chunkify_docs(docs, window=None):
+    smaller_docs = []
+    if window is None:
+        #then don't do anything
+        smaller_docs = docs
+    else:
+        for doc in docs:
+            smaller_docs += chunkify_doc(doc, window)
+    return smaller_docs
+
+
+def chunkify_doc(doc, window):
+    taller_doc = []
+    if len(doc) >= window:
+        for ix, word in enumerate(doc): # iterate each index
+            taller_doc.append(doc[ix - window : ix + window])
+    return taller_doc
+
+
+def make_sparse(docs_to_fit, min_df=50, docs_to_transform=None):
+    cv = CountVectorizer(tokenizer=no_tokenization, preprocessor=None, lowercase=False, min_df=min_df)
+    if docs_to_transform is None:
+        return cv, cv.fit_transform(docs_to_fit)
+    elif docs_to_transform is not None:
+        cv.fit(docs_to_fit)
+        return cv, cv.transform(docs_to_transform)
 
 
 def preprocess(column):
