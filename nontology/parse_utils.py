@@ -89,10 +89,6 @@ def make_sparse(
         return cv, cv.transform(docs_to_transform)
 
 
-def preprocess(column):
-    raise NotImplementedError
-
-
 def concatenate_sparse_matrices(list_of_sparse_matrices):
     """
     Combine matrices for e.g. matrix embeddings.
