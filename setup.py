@@ -17,7 +17,7 @@ setup(
     install_requires=[
         'numpy>=1.14.5',
         'pandas>=0.20.2',
-        'scikit-learn>=0.20.dev0', # not currently working w/o additional nonsense
+        'scikit-learn>=0.19.2', # not currently working w/o additional nonsense
         'nltk>=3.3',
         'scipy>=1.1.0'
     ]
