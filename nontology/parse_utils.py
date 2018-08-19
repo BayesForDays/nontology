@@ -37,9 +37,9 @@ def no_tokenization(tokens):
 
 def chunkify_docs(docs, window=None):
     """
-
-    :param docs:
-    :param window:
+    Turn a list of sentences (as lists of words) into chunks with a window for narrower training.
+    :param docs: A list of lists of words
+    :param window: Context window size to consider for each word. Defaults to all.
     :return:
     """
     smaller_docs = []
@@ -54,9 +54,9 @@ def chunkify_docs(docs, window=None):
 
 def chunkify_doc(doc, window):
     """
-
-    :param doc:
-    :param window:
+    Turn a sentence (a list of words) into chunks with a window.
+    :param doc: A list of words
+    :param window: Context window size to consider for each word. Defaults to all.
     :return:
     """
     taller_doc = []
@@ -71,11 +71,11 @@ def make_sparse(
         docs_to_transform=None
 ):
     """
-
-    :param docs_to_fit:
-    :param min_df:
-    :param stop_words:
-    :param docs_to_transform:
+    Take a pre-tokenized document and turn into a sparse matrix.
+    :param docs_to_fit: A list of lists of tokenized words to build the vocabulary from.
+    :param min_df: Number of records that a word should appear in to be stored as a feature.
+    :param stop_words: List of words to exclude, if any.
+    :param docs_to_transform: A list of lists of tokenized words to transform. If none, we transform the first argument.
     :return:
     """
     cv = CountVectorizer(
@@ -95,8 +95,8 @@ def preprocess(column):
 
 def concatenate_sparse_matrices(list_of_sparse_matrices):
     """
-
-    :param list_of_sparse_matrices:
+    Combine matrices for e.g. matrix embeddings.
+    :param list_of_sparse_matrices: A list of sparse (csr) matrices, output of CountVectorizer.
     :return:
     """
     concatenated = hstack(list_of_sparse_matrices)
