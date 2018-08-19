@@ -200,7 +200,7 @@ def compute_glove_vectors(
     """
     # generate co-occurence matrix and outer product of normalized marginal token counts
     # and return in log space
-    co_occ_matrix = construct_matrices(m)
+    co_occ_matrix = construct_co_occurrence_matrix(m)
     # PCA on co-occurrence matrix
     return compute_vectors(
         co_occ_matrix, n_components, normalize_flag
