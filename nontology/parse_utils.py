@@ -68,7 +68,7 @@ def chunkify_doc(doc, window):
 
 def make_sparse(
         docs_to_fit, min_df=50, stop_words=None,
-        docs_to_transform=None
+        docs_to_transform=None, ngram_range=None,
 ):
     """
     Take a pre-tokenized document and turn into a sparse matrix.
@@ -79,7 +79,7 @@ def make_sparse(
     :return:
     """
     cv = CountVectorizer(
-        tokenizer=no_tokenization, preprocessor=None,
+        tokenizer=no_tokenization, preprocessor=None, ngram_range=ngram_range,
         stop_words=stop_words, lowercase=False, min_df=min_df
     )
     if docs_to_transform is None:
