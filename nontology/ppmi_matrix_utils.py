@@ -15,9 +15,9 @@ def generate_co_occurence_matrix(sparse_tokens):
 
 def construct_co_occurrence_matrix(sparse_tokens):
     """
-
+    Calculates a log-scaled co-occurrence matrix between all elements of a count matrix using a dot product.
     :param sparse_tokens: A sparse matrix of counts
-    :return:
+    :return: Log-scaled co-occurrence matrix
     """
     # compute normalized log co-occurrence counts
     co_occur = (sparse_tokens.T).dot(sparse_tokens).todense()
@@ -152,10 +152,10 @@ def normalize(vecs):
 
 def create_vector_df(vectors, colname, sorted_vocabulary):
     """
-
-    :param vectors:
-    :param colname:
-    :param sorted_vocabulary:
+    Turns an array of learned vectors into a dataframe with an additional column that is the vocabulary.
+    :param vectors: A 2d numpy array of n x k dimensions.
+    :param colname: The name of the column (e.g. "entity_id" or "term")
+    :param sorted_vocabulary: Vocabulary in the proper order. Typically vectorizer.get_feature_names().
     :return:
     """
     vector_df = pd.DataFrame(vectors, index=sorted_vocabulary)
@@ -167,14 +167,12 @@ def compute_pmi_vectors(
         m, n_components, k=1.0, normalize_flag=True
 ):
     """
-
+    Convenience function for taking a sparse matrix and learning vectors based on PPMI values.
     :param m: Sparse matrix of counts
     :param n_components: Desired dimensionality of output
     :param k: Smoothing parameter
     :param normalize_flag: Whether to make vectors length 1
-
-    :param normalize_flag:
-    :return:
+    :return: Lower-dimensional representation of co-occurrence matrix trained on PPMI values.
     """
     # generate co-occurence matrix and outer product of normalized marginal token counts
     # and return in log space
@@ -194,11 +192,11 @@ def compute_glove_vectors(
         m, n_components, normalize_flag=True
 ):
     """
-    From a sparse matrix m, generate lower-dimensional GloVe vectors.
+    Convenience function for taking a sparse matrix and learning GloVe vectors based on co-occurrence values.
     :param m: Sparse matrix of counts
     :param n_components: Desired dimensionality of output
     :param normalize_flag: Whether to make vectors length 1
-    :return:
+    :return: Lower-dimensional representation of co-occurrence matrix trained on log counts.
     """
     # generate co-occurence matrix and outer product of normalized marginal token counts
     # and return in log space
