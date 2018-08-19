@@ -22,3 +22,8 @@ def get_explanation(x1, x2, x_y_matrix):
 
 def show_n_most_similar_x_to_y(x_name, x_y_matrix, top_n=5):
     return x_y_matrix.loc[x_name].sort_values(ascending=False).head(top_n)
+
+
+def n_most_similar(w1, vec_df, n):
+    w1_vec = vec_df.loc[w1]
+    return vec_df.dot(w1_vec).sort_values(ascending=False).head(n)[1:]
