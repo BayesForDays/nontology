@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='nontology',
-    version='0.1.0',
+    version='0.1.1',
     author='Cassandra Jacobs',
     author_email='jacobs.cassandra.l@gmail.com',
     license='MIT',
